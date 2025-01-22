@@ -1,9 +1,12 @@
+import Page from './Components/Page'
+
+
 
 function App() {
 
   return (
     <>
-      <h1>Hallo React App</h1>
+      <Page />
     </>
   )
 }
