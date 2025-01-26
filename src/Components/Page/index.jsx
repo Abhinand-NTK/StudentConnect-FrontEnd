@@ -1,30 +1,38 @@
 import React from 'react';
 import Grid2 from '@mui/material/Grid2';
-import HomeIcon from '@mui/icons-material/Home';
-import { pink } from '@mui/material/colors';
 import Typography from '@mui/material/Typography';
-import { useNavigate } from 'react-router-dom';
+import Breadcrumb from './BreadCrum';
+import DynamicTable from '../Table';
 
-export default function Page({ children, ...props }) {
-    const navigate = useNavigate();
+
+export default function Page({ title = "default", children, ...props }) {
 
     const routeSegments = [
-        { name: 'Dashboard', path: '/dashboard' },
-        { name: 'Profile', path: '/profile' },
-        { name: 'Settings', path: '/settings' },
-        { name: 'Reports', path: '/reports' },
-        { name: 'Help', path: '/help' },
+        { name: 'Dashboard', path: '/dashboard', iconName: 'Home', color: '#1e90ff' },
+        { name: 'Profile', path: '/profile', iconName: 'AccountCircle', color: '#ff6347' },
+        { name: 'Settings', path: '/settings', iconName: 'Settings', color: '#32cd32' },
+        { name: 'Reports', path: '/reports', iconName: 'Assessment', color: '#ffa500' },
+        { name: 'Help', path: '/help', iconName: 'HelpOutline', color: '#ff69b4' },
     ];
+
 
     const size = { md: 12, lg: 12 };
 
+    const localData = [
+        { id: 1, name: "Alice", email: "alice@example.com" },
+        { id: 2, name: "Bob", email: "bob@example.com" },
+        { id: 3, name: "Charlie", email: "charlie@example.com" },
+    ];
+
+    const headers = [
+        { key: "id", label: "ID", filterable: false },
+        { key: "name", label: "Name", filterable: true },
+        { key: "email", label: "Email", filterable: true },
+    ];
+
+
     return (
         <Grid2
-            // item
-            // xs={12} // Ensures it spans full width on all screens
-            // sm={12}
-            // md={12}
-            // lg={12}
             {...size}
             sx={{
                 backgroundColor: 'whirw ',
@@ -52,48 +60,9 @@ export default function Page({ children, ...props }) {
                         color: '#374151',
                     }}
                 >
-                    Title
+                    {title}
                 </Typography>
-
-                <Grid2 container spacing={2}>
-                    {routeSegments.map((item, index) => (
-                        <Grid2
-                            key={index}
-                            // xs="auto"
-                            onClick={() => navigate(item.path)}
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                padding: '8px 16px',
-                                borderRadius: '12px',
-                                backgroundColor: 'linear-gradient(to right, #f3f4f6, #e0e7ff)',
-                                boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-                                cursor: 'pointer',
-                                transition: 'all 0.3s ease-in-out',
-                                '&:hover': {
-                                    backgroundColor: 'linear-gradient(to right, #e0e7ff, #c7d2fe)',
-                                    boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.2)',
-                                },
-                            }}
-                        >
-                            <HomeIcon
-                                fontSize="small"
-                                sx={{ color: pink[500], marginRight: '8px' }}
-                            />
-                            <Typography
-                                variant="subtitle1"
-                                sx={{
-                                    fontWeight: 'bold',
-                                    fontSize: '14px',
-                                    color: '#374151',
-                                }}
-                            >
-                                {item.name}
-                            </Typography>
-                        </Grid2>
-                    ))}
-                </Grid2>
-
+                <Breadcrumb routeSegments={routeSegments} />
                 <Grid2
                     sx={{
                         marginTop: '30px',
@@ -104,6 +73,8 @@ export default function Page({ children, ...props }) {
                         boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                     }}
                 >
+
+                    <DynamicTable data={localData} headers={headers} />;
                     {children}
                 </Grid2>
             </Grid2>

@@ -1,48 +1,56 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Breadcrumbs, Link, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Typography } from "@mui/material";
+import Grid2 from "@mui/material/Grid2";
+import * as Icons from "@mui/icons-material";
 
-const Breadcrumb = () => {
-    const location = useLocation();
+const Breadcrumb = ({ routeSegments }) => {
     const navigate = useNavigate();
 
-    const pathnames = location.pathname.split("/").filter((x) => x);
-
     return (
-        <Breadcrumbs aria-label="breadcrumb">
-            {pathnames.length > 0 ? (
-                <Link
-                    underline="hover"
-                    color="inherit"
-                    onClick={() => navigate("/")}
-                    style={{ cursor: "pointer" }}
-                >
-                    Home
-                </Link>
-            ) : (
-                <Typography color="text.primary">Home</Typography>
-            )}
-            {pathnames.map((value, index) => {
-                const to = `/${pathnames.slice(0, index + 1).join("/")}`;
+        <Grid2 container spacing={2}>
+            {routeSegments.map((item, index) => {
+                // Dynamically resolve the icon component
+                const IconComponent = Icons[item?.iconName] || Icons.HelpOutline;
 
-                const isLast = index === pathnames.length - 1;
-                return isLast ? (
-                    <Typography key={to} color="text.primary">
-                        {value.charAt(0).toUpperCase() + value.slice(1)}
-                    </Typography>
-                ) : (
-                    <Link
-                        key={to}
-                        underline="hover"
-                        color="inherit"
-                        onClick={() => navigate(to)}
-                        style={{ cursor: "pointer" }}
+                return (
+                    <Grid2
+                        key={index}
+                        onClick={() => navigate(item.path)}
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            padding: "8px 16px",
+                            borderRadius: "12px",
+                            backgroundColor: "linear-gradient(to right, #f3f4f6, #e0e7ff)",
+                            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                            cursor: "pointer",
+                            transition: "all 0.3s ease-in-out",
+                            "&:hover": {
+                                backgroundColor: "linear-gradient(to right, #e0e7ff, #c7d2fe)",
+                                boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.2)",
+                            },
+                        }}
                     >
-                        {value.charAt(0).toUpperCase() + value.slice(1)}
-                    </Link>
+                        {/* Render dynamic icon */}
+                        <IconComponent
+                            fontSize="small"
+                            sx={{ color: "#374151", marginRight: "8px" }}
+                        />
+                        <Typography
+                            variant="subtitle1"
+                            sx={{
+                                fontWeight: "bold",
+                                fontSize: "14px",
+                                color: "#374151",
+                            }}
+                        >
+                            {item.name}
+                        </Typography>
+                    </Grid2>
                 );
             })}
-        </Breadcrumbs>
+        </Grid2>
     );
 };
 
