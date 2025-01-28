@@ -1,20 +1,19 @@
 import React from 'react';
 import Page from './Components/Page';
-import Sidebar from './Components/Sidebar';
-import Grid2 from '@mui/material/Grid2';
-import { styled } from '@mui/material/styles';
+import SideBar from './Components/Sidebar';
+import Grid from '@mui/material/Grid2';
 
 function App() {
   return (
     <>
-      <Grid2 container spacing={2}>
-        <Grid2 xs={12} sm={4} md={3} lg={3}> {/* Sidebar with responsive sizes */}
-          <Sidebar />
-        </Grid2>
-        <Grid2 xs={12} sm={8} md={12} lg={12}> {/* Main content */}
+      <Grid sx={{ height: '100vh', width: '100%' }} container >
+        <Grid size={3}>
+          <SideBar />
+        </Grid>
+        <Grid size={9}>
           <Page />
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid >
     </>
   );
 }

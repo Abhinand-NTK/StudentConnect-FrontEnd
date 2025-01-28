@@ -7,9 +7,7 @@ const Sidebar = () => {
     const [sidebarData, setSidebarData] = useState([]);
     const navigate = useNavigate();
 
-    // Dummy API call function (to simulate the backend data)
     const fetchSidebarData = async () => {
-        // Simulate a backend call here
         const dummyData = [
             {
                 module: "Dashboard",
@@ -42,14 +40,13 @@ const Sidebar = () => {
                 ]
             }
         ];
-        setSidebarData(dummyData); // Set data received from the API
+        setSidebarData(dummyData);
     };
 
     useEffect(() => {
         fetchSidebarData();
     }, []);
 
-    // Function to handle navigation
     const handleNavigation = (route) => {
         navigate(route);
     };
@@ -57,10 +54,10 @@ const Sidebar = () => {
     return (
         <Drawer
             sx={{
-                width: 240,
+                height: '100vh',
                 flexShrink: 0,
                 "& .MuiDrawer-paper": {
-                    width: 240,
+                    width: 300,
                     boxSizing: "border-box",
                 },
             }}

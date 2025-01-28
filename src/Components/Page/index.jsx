@@ -35,10 +35,10 @@ export default function Page({ title = "default", children, ...props }) {
         <Grid2
             {...size}
             sx={{
-                backgroundColor: 'whirw ',
+                height: '100vh',
+                backgroundColor: 'white',
                 borderRadius: '12px',
                 padding: '16px',
-                boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
             }}
             {...props}
         >
@@ -81,3 +81,4 @@ export default function Page({ title = "default", children, ...props }) {
         </Grid2 >
     );
 }
+
