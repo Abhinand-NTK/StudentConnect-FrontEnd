@@ -1,17 +1,18 @@
 import React from 'react';
 import Page from './Components/Page';
-import SideBar from './Components/Sidebar';
 import Grid from '@mui/material/Grid2';
+import SideBar from './layouts/SideBar'
+
+// Define your theme
+
 
 function App() {
+
   return (
     <>
       <Grid sx={{ height: '100vh', width: '100%' }} container >
-        <Grid size={3}>
+        <Grid size={12}>
           <SideBar />
-        </Grid>
-        <Grid size={9}>
-          <Page />
         </Grid>
       </Grid >
     </>

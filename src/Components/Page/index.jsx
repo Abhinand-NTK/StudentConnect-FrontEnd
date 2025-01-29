@@ -3,9 +3,11 @@ import Grid2 from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import Breadcrumb from './BreadCrum';
 import DynamicTable from '../Table';
-
+import { useTheme } from '@mui/material/styles';
+import { Paper } from '@mui/material';
 
 export default function Page({ title = "default", children, ...props }) {
+    const theme = useTheme(); // 🎯 Get the current theme
 
     const routeSegments = [
         { name: 'Dashboard', path: '/dashboard', iconName: 'Home', color: '#1e90ff' },
@@ -14,7 +16,6 @@ export default function Page({ title = "default", children, ...props }) {
         { name: 'Reports', path: '/reports', iconName: 'Assessment', color: '#ffa500' },
         { name: 'Help', path: '/help', iconName: 'HelpOutline', color: '#ff69b4' },
     ];
-
 
     const size = { md: 12, lg: 12 };
 
@@ -30,22 +31,22 @@ export default function Page({ title = "default", children, ...props }) {
         { key: "email", label: "Email", filterable: true },
     ];
 
-
     return (
-        <Grid2
-            {...size}
+        <Paper
+            elevation={3}
             sx={{
                 height: '100vh',
-                backgroundColor: 'white',
+                backgroundColor: theme.palette.background.default, // ✅ Dynamic background
+                color: theme.palette.text.primary, // ✅ Dynamic text color
                 borderRadius: '12px',
                 padding: '16px',
+                transition: 'all 0.3s ease-in-out',
             }}
             {...props}
         >
-            <Grid2
-                // {...size}
+            <Paper
                 sx={{
-                    backgroundColor: '#e8edfa',
+                    backgroundColor: theme.palette.mode === 'dark' ? '#333' : '#e8edfa', // ✅ Adjusted for theme
                     borderRadius: '12px',
                     padding: '16px',
                     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
@@ -57,28 +58,26 @@ export default function Page({ title = "default", children, ...props }) {
                     sx={{
                         fontWeight: 'bold',
                         marginBottom: '16px',
-                        color: '#374151',
+                        color: theme.palette.text.primary, // ✅ Dynamic text color
                     }}
                 >
                     {title}
                 </Typography>
                 <Breadcrumb routeSegments={routeSegments} />
-                <Grid2
+                <Paper
                     sx={{
                         marginTop: '30px',
-                        backgroundColor: 'white',
+                        backgroundColor: theme.palette.background.paper, // ✅ Dynamic background
                         height: 'calc(100vh - 200px)',
                         borderRadius: '20px',
                         padding: '16px',
                         boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                     }}
                 >
-
-                    <DynamicTable data={localData} headers={headers} />;
+                    <DynamicTable data={localData} headers={headers} />
                     {children}
-                </Grid2>
-            </Grid2>
-        </Grid2 >
+                </Paper>
+            </Paper>
+        </Paper>
     );
 }
-
