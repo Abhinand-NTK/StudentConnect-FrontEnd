@@ -10,9 +10,7 @@ const Breadcrumb = ({ routeSegments }) => {
     return (
         <Grid2 container spacing={2}>
             {routeSegments.map((item, index) => {
-                // Dynamically resolve the icon component
                 const IconComponent = Icons[item?.iconName] || Icons.HelpOutline;
-
                 return (
                     <Grid2
                         key={index}
@@ -20,7 +18,7 @@ const Breadcrumb = ({ routeSegments }) => {
                         sx={{
                             display: "flex",
                             alignItems: "center",
-                            padding: "8px 16px",
+                            padding: "4px 10px",
                             borderRadius: "12px",
                             backgroundColor: "linear-gradient(to right, #f3f4f6, #e0e7ff)",
                             boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
@@ -34,14 +32,18 @@ const Breadcrumb = ({ routeSegments }) => {
                     >
                         {/* Render dynamic icon */}
                         <IconComponent
-                            fontSize="small"
-                            sx={{ color: "#374151", marginRight: "8px" }}
+                            // fontSize="ezsmall"
+                            sx={{
+                                color: "#374151",
+                                marginRight: "8px",
+                                fontSize: '12px'
+                            }}
                         />
                         <Typography
                             variant="subtitle1"
                             sx={{
                                 fontWeight: "bold",
-                                fontSize: "14px",
+                                fontSize: "8px",
                                 color: "#374151",
                             }}
                         >

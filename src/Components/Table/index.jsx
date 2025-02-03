@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TablePagination,
-    TextField,
-    Button,
-} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { IconButton, Button } from "@mui/material";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
 
 const DynamicTable = ({
     url = null,
@@ -17,12 +9,14 @@ const DynamicTable = ({
     headers,
     allowFilters = true,
     advancedQuery = {},
+    AdvanceSearchComponent = null,
 }) => {
     const [tableData, setTableData] = useState(data || []);
     const [filters, setFilters] = useState({});
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [loading, setLoading] = useState(false);
+    const theme = useTheme();
 
     useEffect(() => {
         if (!data && url) {
@@ -32,16 +26,10 @@ const DynamicTable = ({
         }
     }, [data, url, filters, page, rowsPerPage, advancedQuery]);
 
-    // Fetch data from the URL if no data is passed
     const fetchData = async () => {
         try {
             setLoading(true);
-            const params = {
-                ...filters,
-                page: page + 1,
-                pageSize: rowsPerPage,
-                ...advancedQuery,
-            };
+            const params = { ...filters, page: page + 1, pageSize: rowsPerPage, ...advancedQuery };
             const response = await fetch(url + "?" + new URLSearchParams(params));
             const result = await response.json();
             setTableData(result.results || result);
@@ -52,96 +40,90 @@ const DynamicTable = ({
         }
     };
 
-    // Handle pagination
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
-
+    const handleChangePage = (newPage) => setPage(newPage);
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-
-    // Handle filter changes
     const handleFilterChange = (key, value) => {
         setFilters((prev) => ({ ...prev, [key]: value }));
         setPage(0);
     };
 
-    // Paginate the data when data is provided directly
-    const paginatedData = () => {
-        if (!url && data) {
-            const startIndex = page * rowsPerPage;
-            const endIndex = startIndex + rowsPerPage;
-            return tableData.slice(startIndex, endIndex);
-        }
-        return tableData;
-    };
+    const paginatedData = () => (!url && data ? tableData.slice(page * rowsPerPage, (page + 1) * rowsPerPage) : tableData);
 
     return (
-        <div>
+        <div style={{ width: "100%", padding: "16px" }}>
+            {AdvanceSearchComponent && <div style={{ marginBottom: "16px" }}>{AdvanceSearchComponent}</div>}
             {allowFilters && (
-                <div style={{ marginBottom: "16px" }}>
+                <div style={{ marginBottom: "12px" }}>
                     {headers.map(
                         (header) =>
                             header.filterable && (
-                                <TextField
+                                <input
                                     key={header.key}
-                                    label={`Filter by ${header.label}`}
-                                    variant="outlined"
-                                    size="small"
-                                    style={{ marginRight: "8px" }}
-                                    onChange={(e) =>
-                                        handleFilterChange(header.key, e.target.value)
-                                    }
+                                    type="text"
+                                    placeholder={`Filter by ${header.label}`}
+                                    onChange={(e) => handleFilterChange(header.key, e.target.value)}
+                                    style={{ padding: "8px", marginRight: "8px", border: "1px solid #ccc", borderRadius: "4px" }}
                                 />
                             )
                     )}
                     {!data && (
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => fetchData()}
-                            disabled={loading}
-                        >
+                        <button onClick={fetchData} disabled={loading} style={{ padding: "8px 12px", backgroundColor: "#007bff", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}>
                             {loading ? "Loading..." : "Apply Filters"}
-                        </Button>
+                        </button>
                     )}
                 </div>
             )}
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow>
+
+            <div style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", backgroundColor: theme.palette.background.paper }}>
+                    <thead>
+                        <tr style={{ backgroundColor: theme.palette.mode === "dark" ? "#444" : "#007bff", color: "white" }}>
                             {headers.map((header) => (
-                                <TableCell key={header.key}>{header.label}</TableCell>
+                                <th key={header.key} style={{ padding: "5px", border: "1px solid #ddd", textAlign: "center" }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+                                        {header.icon && React.createElement(header.icon, { sx: { fontSize: '20px' } })}
+                                        {header.label}
+                                    </div>
+                                </th>
                             ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
+                        </tr>
+                    </thead>
+                    <tbody>
                         {paginatedData().map((row, rowIndex) => (
-                            <TableRow key={rowIndex}>
+                            <tr key={rowIndex} style={{ borderBottom: "1px solid #ddd" }}>
                                 {headers.map((header) => (
-                                    <TableCell key={header.key}>
-                                        {header.render
-                                            ? header.render(row[header.key], row)
-                                            : row[header.key]}
-                                    </TableCell>
+                                    <td key={header.key} style={{ padding: "5px", border: "1px solid #ddd", textAlign: "center" }}>
+                                        {header.type === "button" ? (
+                                            <Button variant="contained" color="primary" size="small" startIcon={header.icon && React.createElement(header.icon)} onClick={() => header.buttonAction && header.buttonAction(row)}>
+                                                {header.buttonText}
+                                            </Button>
+                                        ) : header.render ? (
+                                            header.render(row[header.key], row)
+                                        ) : (
+                                            row[header.key]
+                                        )}
+                                    </td>
                                 ))}
-                            </TableRow>
+                            </tr>
                         ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[10, 25, 50]}
-                component="div"
-                count={data ? data.length : tableData.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
+                    </tbody>
+                </table>
+            </div>
+
+            <div style={{ marginTop: "20px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+                <IconButton onClick={() => handleChangePage(page - 1)} disabled={page === 0} sx={{ color: page === 0 ? theme.palette.grey[500] : theme.palette.primary.main }}>
+                    <ArrowBack />
+                </IconButton>
+                <span style={{ fontSize: "12px", fontWeight: "bold", background: theme.palette.mode === "dark" ? "#333" : "#f1f1f1", padding: "6px 12px", borderRadius: "6px", color: theme.palette.mode === "dark" ? "#fff" : "#000" }}>
+                    Page {page + 1}
+                </span>
+                <IconButton onClick={() => handleChangePage(page + 1)} disabled={tableData.length < rowsPerPage} sx={{ color: tableData.length < rowsPerPage ? theme.palette.grey[500] : theme.palette.primary.main }}>
+                    <ArrowForward />
+                </IconButton>
+            </div>
         </div>
     );
 };

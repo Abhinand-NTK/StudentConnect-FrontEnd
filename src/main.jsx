@@ -44,25 +44,26 @@ import { BrowserRouter } from 'react-router-dom';
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { extendTheme } from "@mui/material/styles";
 import theme from './theme/index.js'
+// import index from './index.css'
 
-const demoTheme = extendTheme({
-  palette: {
-    mode: 'light', // or 'dark' for dark mode
-  },
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 600,
-      md: 960, // Adjusted to the default value in MUI
-      lg: 1200,
-      xl: 1536,
-    },
-  },
-});
+// const demoTheme = extendTheme({
+//   palette: {
+//     mode: 'light', // or 'dark' for dark mode
+//   },
+//   breakpoints: {
+//     values: {
+//       xs: 0,
+//       sm: 600,
+//       md: 960, // Adjusted to the default value in MUI
+//       lg: 1200,
+//       xl: 1536,
+//     },
+//   },
+// });
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ThemeProvider theme={demoTheme}>
+    <ThemeProvider theme={theme}>
       <BrowserRouter>
         <CssBaseline />
         <Provider store={store}>
